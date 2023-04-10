@@ -1,16 +1,24 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { PrismaClient } from "@prisma/client";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../components/Navbar";
 import axios from "axios";
 import Cookies from "js-cookie";
-const prisma = new PrismaClient();
+import { useRouter } from "next/router";
+import { useState } from "react";
+import Swal from "sweetalert2";
+import {
+  Button
+} from "@material-tailwind/react"
 
-const BookEdit = ({ book }) => {
-  const [input, setInput] = useState(book);
-
+const BookCreate = () => {
   const router = useRouter();
-  const { bookId } = router.query;
+  const [input, setInput] = useState({
+    title: "",
+    author: "",
+    publisher: "",
+    year: '',
+    pages: '',
+  });
+
+  const [file, setFile] = useState(null);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -22,26 +30,42 @@ const BookEdit = ({ book }) => {
     event.preventDefault();
     const { title, author, publisher, year, pages } = input;
 
-    const intYear = parseInt(year);
-    const intPages = parseInt(pages);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("author", author);
+    formData.append("publisher", publisher);
+    formData.append("year", year);
+    formData.append("pages", pages);
+    formData.append("image", file);
 
     axios
-      .put(
-        `/api/book/${bookId}`,
-        {
-          title,
-          author,
-          publisher,
-          year: intYear,
-          pages: intPages,
+      .post("/api/book", formData, {
+        headers: {
+          authorization: "Bearer " + Cookies.get("token"),
+          "Content-Type": "multipart/form-data",
         },
-        {
-          headers: { authorization: "Bearer " + Cookies.get("token") },
-        }
-      )
+      })
       .then(() => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Succesfully add book!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         router.push("/");
       })
+      .catch((error) => {
+        console.log(error.message);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: error,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+
     setInput({
       title: "",
       author: "",
@@ -49,14 +73,15 @@ const BookEdit = ({ book }) => {
       year: 0,
       pages: 0,
     });
+    setFile(null);
   };
 
   return (
-    <div>
+    <>
       <Navbar />
-      <div className='mx-10 mt-10 mb-12 basis-4/5'>
+    
         <p className='text-3xl text-center font-bold text-black mb-6 pb-6 border-b-4 border-[#FF4C29] w-48 mx-auto'>
-          Edit Book
+          Add Book
         </p>
         <form onSubmit={handleSubmit}>
           <div className='mb-6'>
@@ -156,41 +181,24 @@ const BookEdit = ({ book }) => {
               type='file'
               id='image'
               name='image'
+              onChange={(event) => {
+                setFile(event.target.files[0]);
+              }}
               className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
-              disabled
+              required
             />
-            <span className='text-xs text-red-700'>
-              Image column disabled on update
-            </span>
           </div>
-
           <div className='flex justify-end'>
-            <button
+            <Button
               type='submit'
               className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             >
               Submit
-            </button>
+            </Button>
           </div>
         </form>
-      </div>
-    </div>
+    </>
   );
 };
 
-export default BookEdit;
-
-export const getServerSideProps = async (context) => {
-  const { params } = context;
-  const data = await prisma.book.findUnique({
-    where: {
-      id: parseInt(params.bookId),
-    },
-  });
-
-  return {
-    props: {
-      book: data,
-    },
-  };
-};
+export default BookCreate;

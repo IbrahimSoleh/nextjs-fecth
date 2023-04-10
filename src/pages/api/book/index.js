@@ -1,8 +1,8 @@
+const prisma = new PrismaClient();
 import { PrismaClient } from '@prisma/client';
 import nextConnect from 'next-connect';
-const prisma = new PrismaClient();
-import multer from 'multer';
 import jwt from 'jsonwebtoken';
+import multer from 'multer';
 
 const handler = nextConnect();
 
@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10000000 }, // 10MB limit
+  limits: { fileSize: 10000000 },
 });
 
 handler.use((req, res, next) => {
@@ -44,7 +44,7 @@ handler.post(async (req, res) => {
         publisher,
         year: parseInt(year),
         pages: parseInt(pages),
-        image: req.file.filename, // add the path to the uploaded image to the book data
+        image: req.file.filename,
       },
     });
     res.json({ book });
