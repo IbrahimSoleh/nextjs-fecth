@@ -48,7 +48,7 @@ export default function navbar() {
         </div>
         {!token && (
           <Button variant='gradient' size='sm'>
-            <Link href='/login'>Login</Link>
+            <Link href='../../auth/login'>Login</Link>
           </Button>
         )}
         {token && (
@@ -65,50 +65,5 @@ export default function navbar() {
         )}
       </div>
     </Navbar>
-    // <nav className='flex items-center justify-between flex-wrap bg-[#082032] p-6 sticky top-0 z-50'>
-    //   <div className='flex items-center flex-shrink-0 text-white mr-6'>
-    //     <span className='font-semibold text-xl tracking-tight'>
-    //       Booking Books
-    //     </span>
-    //   </div>
-    //   <div className='w-full block flex-grow flex items-center w-auto'>
-    //     <div className='text-sm flex-grow'>
-    //       <Button variant='text'>
-    //         <Link
-    //           href='/'
-    //           className='block mt-4 inline-block mt-0 text-[#FF4C29] hover:text-white mr-4'
-    //         >
-    //           Book List
-    //         </Link>
-    //       </Button>
-    //       {token && (
-    //         <Link
-    //           href='/books/create'
-    //           className='block mt-4 inline-block mt-0 text-[#FF4C29] hover:text-white mr-4'
-    //         >
-    //           Add Book
-    //         </Link>
-    //       )}
-    //     </div>
-    //     <div>
-    //       {!token && (
-    //         <Button variant='text'>
-    //           <Link href='/login'>Login</Link>
-    //         </Button>
-    //       )}
-    //       {token && (
-    //         <Button
-    //           variant='text'
-    //           onClick={() => {
-    //             Cookies.remove("token");
-    //             window.location = "/";
-    //           }}
-    //         >
-    //           Logout
-    //         </Button>
-    //       )}
-    //     </div>
-    //   </div>
-    // </nav>
   );
 }

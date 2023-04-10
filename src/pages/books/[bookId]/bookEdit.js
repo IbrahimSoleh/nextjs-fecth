@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PrismaClient } from "@prisma/client";
 import Navbar from "../../../components/Navbar";
 import axios from "axios";
@@ -55,7 +55,7 @@ const BookEdit = ({ book }) => {
     <div>
       <Navbar />
       <div className='mx-10 mt-10 mb-12 basis-4/5'>
-        <p className='text-3xl text-center font-bold text-black mb-6 pb-6 border-b-4 border-[#FF4C29] w-48 mx-auto'>
+        <p className='text-3xl text-center font-bold text-black mb-6 pb-6 border-b-4 w-48 mx-auto'>
           Edit Book
         </p>
         <form onSubmit={handleSubmit}>

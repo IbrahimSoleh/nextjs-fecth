@@ -70,7 +70,7 @@ const Book = ({ book }) => {
       <CardFooter className="pt-3">
           {Cookies.get("token") && (
             <div>
-           <Link href={`/books/${book.id}/edit`}>
+           <Link href={`/books/${book.id}/bookEdit`}>
         <Button size="lg" fullWidth={true}>
           Edit Book
         </Button>
